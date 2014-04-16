@@ -1,0 +1,23 @@
+﻿<Window x:Class="EstadoResultadoWPF.WEstadoResultado"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Name="EstadoResultado"
+        Title="Procesamiento de Estado Resultado" Height="486.863" Width="525"
+        >
+    <Grid>
+        <Menu HorizontalAlignment="Left" Margin="0,0,0,419">
+            <MenuItem x:Name="mnData" Header="Data" >
+                <MenuItem x:Name="mnItem" Header="Items" HorizontalAlignment="Left" Click="mnItem_Click"/>
+                <MenuItem x:Name="mnLineas" Header="Líneas de Estado Resultado" HorizontalAlignment="Left"/>
+                <MenuItem x:Name="mnAreas" Header="Areas" HorizontalAlignment="Left"/>
+            </MenuItem>
+            <MenuItem x:Name="mnConfig" Header="Configuración"/>
+        </Menu>
+        <TextBox x:Name="PathIn" HorizontalAlignment="Left" Height="28" Margin="120,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="347" IsEnabled="False"/>
+        <Button x:Name="PathInBtn" Content="Ruta Entrada" Click="btnPathIn_Click" HorizontalAlignment="Left" Height="28" Margin="10,48,0,0" VerticalAlignment="Top" Width="99"/>
+        <TextBox x:Name="PathOut" HorizontalAlignment="Left" Height="28" Margin="120,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="347" IsEnabled="False"/>
+        <Button x:Name="PathOutBtn" Content="Ruta Salida" Click="btnPathOut_Click" HorizontalAlignment="Left" Height="28" Margin="10,85,0,0" VerticalAlignment="Top" Width="99"/>
+        <ListBox x:Name="ListInputFiles" HorizontalAlignment="Left" Height="284" Margin="10,163,0,0" VerticalAlignment="Top" Width="457" SelectionMode="Multiple" />
+        <Button Content="Procesar" x:Name="ProcBtn" Click="btnProc_Click" HorizontalAlignment="Left" Height="32" Margin="10,126,0,0" VerticalAlignment="Top" Width="457"/>
+    </Grid>
+</Window>
