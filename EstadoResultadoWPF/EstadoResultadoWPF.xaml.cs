@@ -40,7 +40,7 @@ namespace EstadoResultadoWPF
         {
             ParamMaint itemMaint = new ParamMaint();
             itemMaint.Title = "Mantención de Items";
-            itemMaint.Show();
+            itemMaint.Show(Constants.INV_AREAS);
         }
 
         private void btnPathIn_Click(object sender, RoutedEventArgs e)
