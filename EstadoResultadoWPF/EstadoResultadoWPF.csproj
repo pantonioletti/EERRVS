@@ -103,7 +103,6 @@
     </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="EERRLib.cs" />
@@ -111,9 +110,16 @@
       <DependentUpon>EstadoResultadoWPF.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ParamMaint.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputExcelReader.cs" />
+    <Compile Include="ParamMaint.xaml.cs">
+      <DependentUpon>ParamMaint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

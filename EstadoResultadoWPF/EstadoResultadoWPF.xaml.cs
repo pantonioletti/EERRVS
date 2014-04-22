@@ -38,9 +38,9 @@ namespace EstadoResultadoWPF
         }
         private void mnItem_Click(object sender, RoutedEventArgs e)
         {
-            /*WParamMaintenance itemMaint = new EstadoResultadoWPF.WParamMaintenance();
+            ParamMaint itemMaint = new ParamMaint();
             itemMaint.Title = "Mantención de Items";
-            itemMaint.Show();*/
+            itemMaint.Show();
         }
 
         private void btnPathIn_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,6 @@ namespace EstadoResultadoWPF
             {
                 System.Windows.Forms.MessageBox.Show(excep.Message);
             }
-
         }
         private void btnPathOut_Click(object sender, RoutedEventArgs e)
         {
