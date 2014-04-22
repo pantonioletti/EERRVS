@@ -19,9 +19,11 @@ namespace EstadoResultadoWPF
     /// </summary>
     public partial class ParamMaint : Window
     {
-        public ParamMaint()
+        private string curParam;
+        public ParamMaint(string param)
         {
             InitializeComponent();
+            curParam = param;
         }
     }
 }
