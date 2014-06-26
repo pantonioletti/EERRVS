@@ -11,7 +11,7 @@ namespace EstadoResultadoWPF
         public static string DBFILE = "dbfile";
         public static string QUERY_ITEMS = "select cod, desc from items;";
         public static string QUERY_AREA = "select area, marca, agrupacion from area;";
-        public static string QUERY_EERR = "select prefix, desc from eerr;";
+        public static string QUERY_EERR = "select length(prefix) l, prefix, desc from eerr order by l asc, prefix asc;";
         public static string ITEMS_1 = "COD";
         public static string ITEMS_2 = "DESC";
         public static string AREA_1 = "AREA";
@@ -23,5 +23,6 @@ namespace EstadoResultadoWPF
         public static string INV_ITEMS = "ITEMS";
         public static string INV_LINEAS = "LINEAS";
         public static string INV_AREAS = "AREAS";
+        public static string[] ARR_MONTH = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
     }
 }
