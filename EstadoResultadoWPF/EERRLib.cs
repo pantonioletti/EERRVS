@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Data;
-using Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
+
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 
 namespace EstadoResultadoWPF
@@ -15,7 +18,8 @@ namespace EstadoResultadoWPF
         private SQLiteConnection sqlite;
         private Dictionary<string, string> items = new Dictionary<string, string>();
         private Dictionary<string, string[]> area = new Dictionary<string, string[]>();
-        private ArrayList eerr = new ArrayList();
+        //private ArrayList eerr = new ArrayList();
+        private Object[] arrEERR;
 
         public EERRDataAndMethods(string confFile)
         {
@@ -93,6 +97,7 @@ namespace EstadoResultadoWPF
                 ad.Dispose();
 
                 // Third load EERR
+                ArrayList eerr = new ArrayList();
                 cmd = sqlite.CreateCommand();
                 cmd.CommandText = Constants.QUERY_EERR;  //set the passed query
                 ad = new SQLiteDataAdapter(cmd);
@@ -106,6 +111,7 @@ namespace EstadoResultadoWPF
                     prefix_desc[1] = (string)rows[i][Constants.EERR_2];
                     eerr.Add(prefix_desc);
                 }
+                arrEERR = eerr.ToArray();
                 ad.Dispose();
             }
             catch (SQLiteException ex)
@@ -115,19 +121,7 @@ namespace EstadoResultadoWPF
             sqlite.Close();
         }
 
-        public void xls2Xlsx(IList filesToConvert, string outputPath)
-        {
-            /*IEnumerator fdEnum = filesToConvert.GetEnumerator();
-            Process p = new Process();
-            while (fdEnum.MoveNext())
-            {
-                string fdName = (string)fdEnum.Current;
-                p.StartInfo.Arguments = Constants.XLCONVERT_VBS + " " + fdName + " " + outputPath;
-                p.StartInfo.FileName = "cscript.exe";
-
-            }*/
-        }
-
+ 
         public Dictionary<string, string> getItems()
         {
             return items;
@@ -138,11 +132,73 @@ namespace EstadoResultadoWPF
             return area;
         }
 
-        public ArrayList getLineas()
+        public string getArea(string code)
         {
-            return eerr;
+            string retVal = "N/A";
+            if (area.ContainsKey(code))
+            {
+                retVal = area[code][1];
+            }
+            return retVal;
         }
 
+        public string getBrand(string code)
+        {
+            string retVal = "N/A";
+            if (area.ContainsKey(code))
+            {
+                retVal = area[code][0];
+            }
+            return retVal;
+        }
+
+        public Object[] getLineas()
+        {
+            return arrEERR;
+        }
+
+        public string getLinea(string acct)
+        {
+            string retVal = null;
+            for (int i = 0; i < arrEERR.Length; i++)
+                if (acct.StartsWith(((string[])arrEERR[i])[0]))
+                {
+                    retVal = ((string[])arrEERR[i])[1];
+                    break;
+                }
+            return retVal;
+        }
+
+        public string getItem(string code)
+        {
+            return items[code];
+        }
+
+        public SpreadsheetDocument buildSpreadsheet(string filename)
+        {
+            SpreadsheetDocument xlDoc;
+            try
+            {
+                xlDoc = SpreadsheetDocument.Create(filename + ".xlsx", SpreadsheetDocumentType.Workbook);
+                WorkbookPart wbp = xlDoc.AddWorkbookPart();
+                wbp.Workbook = new Workbook();
+
+                wbp.AddNewPart<WorksheetPart>();
+                //wbp.WorksheetParts.First<WorksheetPart>();//.Worksheet = new Worksheet();
+                //wsp.Worksheet = new Worksheet(new SheetData());
+
+                Sheets shts = wbp.Workbook.AppendChild<Sheets>(new Sheets());
+                //Sheet sht = new Sheet() { Id = wbp.GetIdOfPart(wsp), SheetId = 1, Name = "Estado resultado"};
+                //shts.Append(sht);
+                wbp.Workbook.Save();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                xlDoc = null;
+            }
+            return xlDoc;
+        }
 
 
     }
