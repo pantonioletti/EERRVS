@@ -41,7 +41,7 @@ namespace EstadoResultadoWPF
         }
         private void mnItem_Click(object sender, RoutedEventArgs e)
         {
-            ParamMaint itemMaint = new ParamMaint(Constants.INV_AREAS,eerrLib);
+            ParamMaint itemMaint = new ParamMaint(Constants.INV_ITEMS,eerrLib);
             itemMaint.Title = "Mantención de Items";
             itemMaint.Show();
         }
@@ -51,15 +51,17 @@ namespace EstadoResultadoWPF
             FolderBrowserDialog fldIn = new FolderBrowserDialog();
             fldIn.SelectedPath = "C:\\dev\\projects";
             fldIn.ShowDialog();
+            //PathIn.Clear();
+            ListInputFiles.Items.Clear();
             PathIn.Text = fldIn.SelectedPath;
             try
             {
-                IEnumerable<string> files = Directory.EnumerateFiles(PathIn.Text, "*.csv");
+                IEnumerable<string> files = Directory.EnumerateFiles(PathIn.Text);//, "*.csv,*.xls");
                 IEnumerator<string> enFiles = files.GetEnumerator();
                 while (enFiles.MoveNext())
                 {
                     string fName = enFiles.Current;
-                    if (fName.EndsWith(".csv"))
+                    if (fName.EndsWith(".csv")||fName.EndsWith(".xls"))
                         ListInputFiles.Items.Add(fName.Replace((PathIn.Text).Insert((PathOut.Text).Length, "\\"), ""));
                 }
             }
@@ -92,22 +94,36 @@ namespace EstadoResultadoWPF
                 string outPath = s.ToString();
                 StreamWriter log = new StreamWriter(s.ToString() + ".log");
                 SLDocument xlDoc = new SLDocument(); //s.ToString() + ".xlsx","Estado resultado");
+
+                xlDoc.AddWorksheet("Estado resultado");
+                xlDoc.SelectWorksheet("Estado resultado");
+                string[] headers =new string[]{ "Estado","Empresa","Agrupacion","Marca","EERR","Detalle EERR","Cuenta","Desc Cuenta","Mes","Fecha","# Compte","Tipo", "Glosa","Area","C.Costo","Item","Desc Item","F.Efec","Analisis","Refer","Fch Ref","Fch Vto","DEBE","HABER","SALDO","Sucursal"};
+                int col = 1;
+                foreach(string h in headers)
+                {
+                    xlDoc.SetCellValue(1, col++, h);
+                }
+                //xlDoc.Save();
                 
                 s.Append(".csv");
                 StreamWriter sw = new StreamWriter(s.ToString());
                 PathOut.Text = s.ToString();
                 StringBuilder sb = new StringBuilder();
                 System.Collections.IEnumerator idxEnum = ListInputFiles.SelectedItems.GetEnumerator();
-                bool headers = false;
+                //bool headers = false;
                 EERRCsvRW csvrw = new EERRCsvRW();
                 while (idxEnum.MoveNext())
                 {
                     string inFile = (string)idxEnum.Current;
-                    s = csvrw.readCsv(inFile, eerrLib, xlDoc);
+                    if (inFile.EndsWith(".xls"))
+                        s = csvrw.readXls(inFile, eerrLib, xlDoc);
+                    else
+                        s = csvrw.readCsv(inFile, eerrLib, xlDoc);
                     sw.WriteLine(s.ToString());
                 }
                 sw.Close();
-                xlDoc.SaveAs(outPath +".xlsx");
+                xlDoc.SaveAs(outPath + ".xlsx");
+                //xlDoc.Save();
                 //eerrLib.convertCSV2Xlsx(s.ToString(), log);
                 log.Close();
                 System.Windows.MessageBox.Show("Proceso terminado");
