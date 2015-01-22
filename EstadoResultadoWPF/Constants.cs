@@ -9,6 +9,8 @@ namespace EstadoResultadoWPF
     class Constants
     {
         public static string DBFILE = "dbfile";
+        public static string DEFAULT_INPUT_DIR = "input_dir";
+        public static string DEFAULT_OUTPUT_DIR = "output_dir";
         public static string QUERY_ITEMS = "select cod, desc from items;";
         public static string QUERY_AREA = "select area, marca, agrupacion from area;";
         public static string QUERY_EERR = "select length(prefix) l, prefix, desc from eerr order by l asc, prefix asc;";
@@ -24,5 +26,7 @@ namespace EstadoResultadoWPF
         public static string INV_LINEAS = "LINEAS";
         public static string INV_AREAS = "AREAS";
         public static string[] ARR_MONTH = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+        public static string[] EERR_SHEET_HEADERS = { "Estado", "Empresa", "Agrupacion", "Marca", "EERR", "Detalle EERR", "Cuenta", "Desc Cuenta", "Mes", "Fecha", "# Compte", "Tipo", "Glosa", "Area", "C.Costo", "Item", "Desc Item", "F.Efec", "Analisis", "Refer", "Fch Ref", "Fch Vto", "DEBE", "HABER", "SALDO", "Sucursal" };
+        public static string EERR_SHEET_NAME = "Estado resultado";
     }
 }

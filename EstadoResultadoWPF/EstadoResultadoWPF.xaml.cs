@@ -17,7 +17,8 @@ using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using SpreadsheetLight;
+
+using NPOI.XSSF.UserModel;
 
 
 namespace EstadoResultadoWPF
@@ -37,7 +38,16 @@ namespace EstadoResultadoWPF
                 System.Windows.Forms.MessageBox.Show("El aplicativo require archivo de configuración (.ini).");
             else
                 eerrLib = new EERRDataAndMethods(cmdLn[1]);
+            string s = eerrLib.getIniParam(Constants.DEFAULT_INPUT_DIR);
+            if (string.IsNullOrEmpty(s))
+                s = "";
+            PathIn.Text = s;
 
+            s = eerrLib.getIniParam(Constants.DEFAULT_OUTPUT_DIR);
+            if (string.IsNullOrEmpty(s))
+                s = "";
+            PathOut.Text = s;
+            listFiles();
         }
         private void mnItem_Click(object sender, RoutedEventArgs e)
         {
@@ -46,34 +56,42 @@ namespace EstadoResultadoWPF
             itemMaint.Show();
         }
 
-        private void btnPathIn_Click(object sender, RoutedEventArgs e)
+        private void listFiles()
         {
-            FolderBrowserDialog fldIn = new FolderBrowserDialog();
-            fldIn.SelectedPath = "C:\\dev\\projects";
-            fldIn.ShowDialog();
-            //PathIn.Clear();
-            ListInputFiles.Items.Clear();
-            PathIn.Text = fldIn.SelectedPath;
             try
             {
+                ListInputFiles.Items.Clear();
                 IEnumerable<string> files = Directory.EnumerateFiles(PathIn.Text);//, "*.csv,*.xls");
                 IEnumerator<string> enFiles = files.GetEnumerator();
                 while (enFiles.MoveNext())
                 {
                     string fName = enFiles.Current;
-                    if (fName.EndsWith(".csv")||fName.EndsWith(".xls"))
-                        ListInputFiles.Items.Add(fName.Replace((PathIn.Text).Insert((PathOut.Text).Length, "\\"), ""));
+                    //if (fName.EndsWith(".csv") || fName.EndsWith(".xls"))
+                    if (fName.EndsWith(".xls"))
+                        //ListInputFiles.Items.Add(fName.Replace((PathIn.Text).Insert((PathOut.Text).Length, "\\"), ""));
+                        ListInputFiles.Items.Add(fName.Replace(PathIn.Text+"\\", ""));
                 }
             }
             catch (Exception excep)
             {
                 System.Windows.Forms.MessageBox.Show(excep.Message);
             }
+
+        }
+        private void btnPathIn_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fldIn = new FolderBrowserDialog();
+            //fldIn.SelectedPath = "C:\\dev\\projects";
+            fldIn.ShowDialog();
+            //PathIn.Clear();
+            ListInputFiles.Items.Clear();
+            PathIn.Text = fldIn.SelectedPath;
+            listFiles();
         }
         private void btnPathOut_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fldOut = new FolderBrowserDialog();
-            fldOut.SelectedPath = "C:\\dev\\projects";
+            //fldOut.SelectedPath = "C:\\dev\\projects";
             fldOut.ShowDialog();
             PathOut.Text = fldOut.SelectedPath;
         }
@@ -86,45 +104,32 @@ namespace EstadoResultadoWPF
                 System.Windows.MessageBox.Show("Debe seleccionar carpeta e salida");
             else
             {
-                StreamReader sr;
+                FileOut.Clear();
                 StringBuilder s = new StringBuilder();
-                s.Append(PathOut.Text);
-                s.Append("\\eerr_");
+                s.Append("eerr_");
                 s.Append(System.DateTime.Now.Ticks.ToString());
-                string outPath = s.ToString();
-                StreamWriter log = new StreamWriter(s.ToString() + ".log");
-                SLDocument xlDoc = new SLDocument(); //s.ToString() + ".xlsx","Estado resultado");
+                FileOut.Text = s.ToString() + ".xlsx";
 
-                xlDoc.AddWorksheet("Estado resultado");
-                xlDoc.SelectWorksheet("Estado resultado");
-                string[] headers =new string[]{ "Estado","Empresa","Agrupacion","Marca","EERR","Detalle EERR","Cuenta","Desc Cuenta","Mes","Fecha","# Compte","Tipo", "Glosa","Area","C.Costo","Item","Desc Item","F.Efec","Analisis","Refer","Fch Ref","Fch Vto","DEBE","HABER","SALDO","Sucursal"};
-                int col = 1;
-                foreach(string h in headers)
+                StreamWriter log = new StreamWriter(s.ToString() + ".log");
+                XSSFWorkbook xlDoc = new XSSFWorkbook();
+
+                XSSFSheet sh = (XSSFSheet)xlDoc.CreateSheet(Constants.EERR_SHEET_NAME);
+                var r = sh.CreateRow(0);
+                int col = 0;
+                foreach(string h in Constants.EERR_SHEET_HEADERS)
                 {
-                    xlDoc.SetCellValue(1, col++, h);
+                    (r.CreateCell(col++)).SetCellValue(h);
                 }
-                //xlDoc.Save();
                 
-                s.Append(".csv");
-                StreamWriter sw = new StreamWriter(s.ToString());
-                PathOut.Text = s.ToString();
-                StringBuilder sb = new StringBuilder();
                 System.Collections.IEnumerator idxEnum = ListInputFiles.SelectedItems.GetEnumerator();
-                //bool headers = false;
                 EERRCsvRW csvrw = new EERRCsvRW();
+                string path = PathIn.Text + "\\";
                 while (idxEnum.MoveNext())
                 {
-                    string inFile = (string)idxEnum.Current;
-                    if (inFile.EndsWith(".xls"))
-                        s = csvrw.readXls(inFile, eerrLib, xlDoc);
-                    else
-                        s = csvrw.readCsv(inFile, eerrLib, xlDoc);
-                    sw.WriteLine(s.ToString());
+                    string inFile = path + (string)idxEnum.Current;
+                    csvrw.readXls(inFile, eerrLib, xlDoc);
                 }
-                sw.Close();
-                xlDoc.SaveAs(outPath + ".xlsx");
-                //xlDoc.Save();
-                //eerrLib.convertCSV2Xlsx(s.ToString(), log);
+                xlDoc.Write(new FileStream(PathOut.Text + "\\" +FileOut.Text + ".xlsx",FileMode.Create, FileAccess.Write));
                 log.Close();
                 System.Windows.MessageBox.Show("Proceso terminado");
             }

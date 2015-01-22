@@ -18,6 +18,7 @@ namespace EstadoResultadoWPF
         private SQLiteConnection sqlite;
         private Dictionary<string, string> items = new Dictionary<string, string>();
         private Dictionary<string, string[]> area = new Dictionary<string, string[]>();
+        Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
         //private ArrayList eerr = new ArrayList();
         private Object[] arrEERR;
 
@@ -28,7 +29,8 @@ namespace EstadoResultadoWPF
 
         private void loadConf(string confFile)
         {
-            Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
+            //Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
+            confKeyValuePairs.Clear();
             string db_file = "";
             // Load conf file
             try
@@ -56,6 +58,7 @@ namespace EstadoResultadoWPF
             {
 
                 System.Windows.Forms.MessageBox.Show("El aplicativo require archivo de configuración (.ini).");
+                System.Console.WriteLine(ex.Message);
             }
             sqlite = new SQLiteConnection("Data Source=" + db_file);
             SQLiteDataAdapter ad;
@@ -121,6 +124,14 @@ namespace EstadoResultadoWPF
             sqlite.Close();
         }
 
+        public string getIniParam(string key)
+        {
+            string retVal = null;
+
+            if (!string.IsNullOrEmpty(key) && confKeyValuePairs.ContainsKey(key))
+                retVal = confKeyValuePairs[key];
+            return retVal;
+        }
  
         public Dictionary<string, string> getItems()
         {
@@ -145,7 +156,7 @@ namespace EstadoResultadoWPF
         public string getBrand(string code)
         {
             string retVal = "N/A";
-            if (area.ContainsKey(code))
+            if (!string.IsNullOrEmpty(code) && area.ContainsKey(code))
             {
                 retVal = area[code][0];
             }
@@ -171,7 +182,12 @@ namespace EstadoResultadoWPF
 
         public string getItem(string code)
         {
-            return items[code];
+            string retVal = "N/A";
+            if (!string.IsNullOrEmpty(code) && items.ContainsKey(code))
+            {
+                retVal = items[code];
+            }
+            return retVal;
         }
 
         public SpreadsheetDocument buildSpreadsheet(string filename)
