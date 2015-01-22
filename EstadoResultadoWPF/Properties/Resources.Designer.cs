@@ -61,35 +61,32 @@ namespace EstadoResultadoWPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to account_prefix=Cuenta Contable 
+        ///   Looks up a localized string similar to dbfile=C:\dev\projects\ScriptsUtil\conf\rcl\rec_config.db
+        ///input_dir=C:\dev\projects\ScriptsUtil\data
+        ///output_dir=C:\dev\projects\ScriptsUtil\data\rcl
         ///
-        ///input_A=date
-        ///input_B=compte
-        ///input_C=type
-        ///input_D=comment
-        ///input_E=area
-        ///input_F=cost_center
-        ///input_G=item
-        ///input_H=eff_date
-        ///input_I=analisys_date
-        ///input_J=reference
-        ///input_K=ref_date
-        ///input_L=exp_date
-        ///input_M=debit
-        ///input_N=credit
-        ///input_O=balance
-        ///input_P=branch
+        ///account_prefix=Cuenta Contable 
+        ///
+        ///input_date=1
+        ///input_compte=2
+        ///input_type=3
+        ///input_comment=4
+        ///input_area=5
+        ///input_cost_center=6
+        ///input_item=7
+        ///input_eff_date=8
+        ///input_analisys_date=9
+        ///input_reference=10
+        ///input_ref_date=11
+        ///input_exp_date=12
+        ///input_debit=13
+        ///input_credit=14
+        ///input_balance=15
+        ///input_branch=16
         ///
         ///head_status=Estado
         ///head_company=Empresa
-        ///head_desc_area=Agrupacion
-        ///head_brand=Marca
-        ///head_det_eerr=Detalle EERR
-        ///head_date=Fecha
-        ///head_compte=# Compte
-        ///head_type=Tipo
-        ///head_comment=Glosa
-        ///head_area=Area        /// [rest of string was truncated]&quot;;.
+        ///he [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string rcl_format {
             get {
