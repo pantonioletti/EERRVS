@@ -19,7 +19,6 @@ namespace EstadoResultadoWPF
         private Dictionary<string, string> items = new Dictionary<string, string>();
         private Dictionary<string, string[]> area = new Dictionary<string, string[]>();
         Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
-        //private ArrayList eerr = new ArrayList();
         private Object[] arrEERR;
 
         public EERRDataAndMethods(string confFile)
@@ -29,7 +28,6 @@ namespace EstadoResultadoWPF
 
         private void loadConf(string confFile)
         {
-            //Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
             confKeyValuePairs.Clear();
             string db_file = "";
             // Load conf file
@@ -200,12 +198,8 @@ namespace EstadoResultadoWPF
                 wbp.Workbook = new Workbook();
 
                 wbp.AddNewPart<WorksheetPart>();
-                //wbp.WorksheetParts.First<WorksheetPart>();//.Worksheet = new Worksheet();
-                //wsp.Worksheet = new Worksheet(new SheetData());
 
                 Sheets shts = wbp.Workbook.AppendChild<Sheets>(new Sheets());
-                //Sheet sht = new Sheet() { Id = wbp.GetIdOfPart(wsp), SheetId = 1, Name = "Estado resultado"};
-                //shts.Append(sht);
                 wbp.Workbook.Save();
             }
             catch (Exception e)

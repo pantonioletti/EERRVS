@@ -3,11 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 using NPOI.HSSF.Model;
 using NPOI.HSSF.UserModel;
@@ -94,22 +90,17 @@ namespace EstadoResultadoWPF
         const string C_DATA_STATUS = "REAL";
         StreamReader in_fd;
 
-        public StringBuilder readXls(string file, EERRDataAndMethods eerr, XSSFWorkbook twb)// P+SLDocument ws)
+        public StringBuilder readXls(string file, EERRDataAndMethods eerr, XSSFWorkbook twb)
         {
             StringBuilder retVal = new StringBuilder("");
             HSSFWorkbook wb;
-            //FileStream fs = new FileStream(file, FileMode.Open);
             wb = new HSSFWorkbook(new FileStream(file, FileMode.Open));
 
             ISheet sheet = wb.GetSheetAt(0);
-            //if (sheet.LastRowNum > 1)
             IRow r = sheet.GetRow(0);
             ICell c = r.GetCell(0);
             string company = c.StringCellValue;
             XSSFSheet sh = (XSSFSheet)twb.GetSheet("Estado resultado");
-            // P+ ws.SelectWorksheet("Estado resultado");
-            // P+ ws.InsertRow(2,50);
-            // P+ int currR = 2;
 
             string acct = "";
             string acctDesc = "";
@@ -213,7 +204,6 @@ namespace EstadoResultadoWPF
                             if (c != null) {
                                 if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
                                 {
-                                    // P+ ws.SetCellValueNumeric(currR, C_OUT_DEBIT, c.ToString());                      // 23
                                     cell = (XSSFCell)row.CreateCell(C_OUT_DEBIT - 1);
                                     cell.SetCellValue(v);
                                 }
@@ -226,7 +216,6 @@ namespace EstadoResultadoWPF
                                 {
                                     cell = (XSSFCell)row.CreateCell(C_OUT_CREDIT - 1);
                                     cell.SetCellValue(v);
-                                    // P+ ws.SetCellValueNumeric(currR, C_OUT_CREDIT, c.ToString());                     // 24
                                 }
                             }
                             c = r.GetCell(C_IN_BALANCE - 1);
@@ -235,14 +224,11 @@ namespace EstadoResultadoWPF
                                 s = c.ToString();
                                 if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
                                 {
-                                    // P+ ws.SetCellValueNumeric(currR, C_OUT_BALANCE, c.ToString());                    // 25
                                     cell = (XSSFCell)row.CreateCell(C_OUT_BALANCE - 1);
                                     cell.SetCellValue(v);
                                 }
                             }
 
-                            // P+ if (++currR % 50 == 1)
-                            // P+    ws.InsertRow(currR, 50);
                         }
                     }
 
