@@ -14,6 +14,7 @@ namespace EstadoResultadoWPF
         public static string QUERY_ITEMS = "select cod, desc from items;";
         public static string QUERY_AREA = "select area, marca, agrupacion from area;";
         public static string QUERY_EERR = "select length(prefix) l, prefix, desc from eerr order by l asc, prefix asc;";
+        public static string QUERY_SUCURSAL = "select cod, desc from sucursal;";
         public static string ITEMS_1 = "COD";
         public static string ITEMS_2 = "DESC";
         public static string AREA_1 = "AREA";
@@ -21,6 +22,8 @@ namespace EstadoResultadoWPF
         public static string AREA_3 = "AGRUPACION";
         public static string EERR_1 = "PREFIX";
         public static string EERR_2 = "DESC";
+        public static string BRANCH_1 = "COD";
+        public static string BRANCH_2 = "DESC";
         public static string XLCONVERT_VBS = "xls2xlsx.vbs";
         public static string INV_ITEMS = "ITEMS";
         public static string INV_LINEAS = "LINEAS";
