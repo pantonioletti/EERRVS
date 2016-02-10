@@ -80,6 +80,10 @@ namespace EstadoResultadoWPF
         const int C_OUT_CREDIT = 24;
         const int C_OUT_BALANCE = 25;
         const int C_OUT_BRANCH = 26;
+        const string C_COL_DEBIT = "W";
+        const string C_COL_CREDIT = "X";
+
+        string[] months ={ "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
 
         const string C_STR_IN_HEAD = "RCL SUDAMERICANA SOCIEDAD ANONIMA";
         const string C_STR_IN_ACCOUNT = "Cuenta Contable";
@@ -90,7 +94,7 @@ namespace EstadoResultadoWPF
         const string C_DATA_STATUS = "REAL";
         StreamReader in_fd;
 
-        public StringBuilder readXls(string file, EERRDataAndMethods eerr, XSSFWorkbook twb)
+        public StringBuilder readXls(string file, EERRDataAndMethods eerr, XSSFWorkbook twb, bool applyRate, Double rate)
         {
             StringBuilder retVal = new StringBuilder("");
             HSSFWorkbook wb;
@@ -152,6 +156,17 @@ namespace EstadoResultadoWPF
                             cell = (XSSFCell)row.CreateCell(C_OUT_DATE - 1);
                             cell.SetCellValue(c.ToString());
 
+                            string sdate = c.ToString();
+                            if (sdate.Length == 10)
+                            {
+                                short m = 0;
+                                if (Int16.TryParse(sdate.Substring(3, 2), out m))
+                                {
+                                    cell = (XSSFCell)row.CreateCell(C_OUT_MONTH - 1);
+                                    cell.SetCellValue(months[m - 1]);
+                                }
+                            }
+
                             c = r.GetCell(C_IN_COMPTE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_COMPTE - 1);
                             cell.SetCellValue(c.ToString());
@@ -198,24 +213,38 @@ namespace EstadoResultadoWPF
                             cell = (XSSFCell)row.CreateCell(C_OUT_EXP_DATE - 1);
                             cell.SetCellValue(c.ToString());
 
-                            s = c.ToString();
+                            XSSFCell deb = null;
+                            short doubleFormat = HSSFDataFormat.GetBuiltinFormat("#,##0");  //wb.CreateDataFormat().GetFormat("#,##0");
                             double v = 0;
                             c = r.GetCell(C_IN_DEBIT - 1);
-                            if (c != null) {
-                                if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
-                                {
-                                    cell = (XSSFCell)row.CreateCell(C_OUT_DEBIT - 1);
-                                    cell.SetCellValue(v);
-                                }
-                            }
-                            c = r.GetCell(C_IN_CREDIT - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_DEBIT - 1);
+                            deb = cell;
                             if (c != null)
                             {
                                 s = c.ToString();
                                 if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
                                 {
-                                    cell = (XSSFCell)row.CreateCell(C_OUT_CREDIT - 1);
-                                    cell.SetCellValue(v);
+                                    //cell = (XSSFCell)row.CreateCell(C_OUT_DEBIT - 1);
+                                    cell.SetCellValue((applyRate?rate:1)*v);
+                                    cell.SetCellType(CellType.Numeric);
+                                    cell.CellStyle.DataFormat = doubleFormat;
+                                    
+                                }
+                            }
+
+                            XSSFCell cred = null;
+                            c = r.GetCell(C_IN_CREDIT - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_CREDIT - 1);
+                            cred = cell;
+                            if (c != null)
+                            {
+                                s = c.ToString();
+                                if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
+                                {
+                                    //cell = (XSSFCell)row.CreateCell(C_OUT_CREDIT - 1);
+                                    cell.SetCellValue((applyRate ? rate : 1) * v);
+                                    cell.SetCellType(CellType.Numeric);
+                                    cell.CellStyle.DataFormat = doubleFormat;
                                 }
                             }
                             c = r.GetCell(C_IN_BALANCE - 1);
@@ -225,10 +254,22 @@ namespace EstadoResultadoWPF
                                 if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
                                 {
                                     cell = (XSSFCell)row.CreateCell(C_OUT_BALANCE - 1);
-                                    cell.SetCellValue(v);
+                                    cell.SetCellValue((applyRate ? rate : 1) * v);
+                                    cell.SetCellType(CellType.Formula);
+                                    cell.SetCellFormula(String.Format("{0}{1}-{2}{3}", C_COL_DEBIT, cell.Row.RowNum+1, C_COL_CREDIT, cell.Row.RowNum+1));
+                                    cell.CellStyle.DataFormat = doubleFormat;
                                 }
                             }
-
+                            c = r.GetCell(C_IN_BRANCH - 1);
+                            if (c != null)
+                            {
+                                s = c.ToString();
+                                if (!string.IsNullOrEmpty(s))
+                                {
+                                    cell = (XSSFCell)row.CreateCell(C_OUT_BRANCH - 1);
+                                    cell.SetCellValue(eerr.getSucursal(s));
+                                }
+                            }
                         }
                     }
 

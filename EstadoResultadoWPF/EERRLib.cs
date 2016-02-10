@@ -18,6 +18,7 @@ namespace EstadoResultadoWPF
         private SQLiteConnection sqlite;
         private Dictionary<string, string> items = new Dictionary<string, string>();
         private Dictionary<string, string[]> area = new Dictionary<string, string[]>();
+        private Dictionary<string, string> sucursal = new Dictionary<string, string>();
         Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
         private Object[] arrEERR;
 
@@ -114,6 +115,20 @@ namespace EstadoResultadoWPF
                 }
                 arrEERR = eerr.ToArray();
                 ad.Dispose();
+
+                // Fourth load branches
+                cmd = sqlite.CreateCommand();
+                cmd.CommandText = Constants.QUERY_SUCURSAL;  //set the passed query
+                ad = new SQLiteDataAdapter(cmd);
+                dt = new System.Data.DataTable();
+                ad.Fill(dt); //fill the datasource
+                rows = dt.Select();
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    sucursal.Add((string)rows[i][Constants.BRANCH_1], (string)rows[i][Constants.BRANCH_2]);
+                }
+                arrEERR = eerr.ToArray();
+                ad.Dispose();
             }
             catch (SQLiteException ex)
             {
@@ -184,6 +199,16 @@ namespace EstadoResultadoWPF
             if (!string.IsNullOrEmpty(code) && items.ContainsKey(code))
             {
                 retVal = items[code];
+            }
+            return retVal;
+        }
+
+        public string getSucursal(string cod)
+        {
+            string retVal = "N/A";
+            if (sucursal.ContainsKey(cod))
+            {
+                retVal = sucursal[cod];
             }
             return retVal;
         }

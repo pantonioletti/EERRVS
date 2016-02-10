@@ -102,6 +102,11 @@ namespace EstadoResultadoWPF
                 System.Windows.MessageBox.Show("Debe haber archivos de entrada seleccionados");
             else if (PathOut.Text.Length == 0)
                 System.Windows.MessageBox.Show("Debe seleccionar carpeta e salida");
+            else if (chkApplyRate.IsChecked.Value && txtExchgRate.Text.Trim().Length == 0)
+            {
+                System.Windows.MessageBox.Show("Debe ingresar el tipo de cambio");
+                txtExchgRate.Focus();
+            }
             else
             {
                 FileOut.Clear();
@@ -116,23 +121,58 @@ namespace EstadoResultadoWPF
                 XSSFSheet sh = (XSSFSheet)xlDoc.CreateSheet(Constants.EERR_SHEET_NAME);
                 var r = sh.CreateRow(0);
                 int col = 0;
-                foreach(string h in Constants.EERR_SHEET_HEADERS)
+                foreach (string h in Constants.EERR_SHEET_HEADERS)
                 {
                     (r.CreateCell(col++)).SetCellValue(h);
                 }
-                
+
                 System.Collections.IEnumerator idxEnum = ListInputFiles.SelectedItems.GetEnumerator();
                 EERRCsvRW csvrw = new EERRCsvRW();
                 string path = PathIn.Text + "\\";
                 while (idxEnum.MoveNext())
                 {
                     string inFile = path + (string)idxEnum.Current;
-                    csvrw.readXls(inFile, eerrLib, xlDoc);
+                    Double rate = chkApplyRate.IsChecked.Value?Double.Parse(txtExchgRate.Text):0;
+                    csvrw.readXls(inFile, eerrLib, xlDoc, chkApplyRate.IsChecked.Value, rate);
                 }
-                xlDoc.Write(new FileStream(PathOut.Text + "\\" +FileOut.Text + ".xlsx",FileMode.Create, FileAccess.Write));
+                xlDoc.Write(new FileStream(PathOut.Text + "\\" + FileOut.Text /*+ ".xlsx"*/, FileMode.Create, FileAccess.Write));
                 log.Close();
                 System.Windows.MessageBox.Show("Proceso terminado");
             }
+        }
+
+        private void chkApplyRate_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void chkApplyRate_Click(object sender, RoutedEventArgs e)
+        {
+            if (chkApplyRate.IsChecked.Value)
+            {
+                txtExchgRate.Text = "";
+                txtExchgRate.IsEnabled = true;
+                txtExchgRate.Focus();
+            }
+            else
+            {
+                txtExchgRate.IsEnabled = false;
+            }
+        }
+
+        private void txtExchgRate_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtExchgRate.Text != "")
+            {
+                try
+                {
+                    double rate = Double.Parse(txtExchgRate.Text);
+                }
+                catch (FormatException fe)
+                { txtExchgRate.Text = "Un número CTM!!!!!"; }
+                catch (OverflowException oe)
+                { txtExchgRate.Text = "No tan grande saco 'e coco!!!!"; }
+            }
+
         }
         
     }
