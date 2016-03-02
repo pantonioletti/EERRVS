@@ -13,6 +13,19 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace EstadoResultadoWPF
 {
+	public class AreaData
+	{
+		public string Area {get; set;}
+		public string Marca {get; set;}
+		public string Agrupacion {get; set;}
+	}
+
+	public class ItemData
+	{
+		public string Codigo {get; set;}
+		public string Descripcion {get; set;}
+	}
+	
     public class EERRDataAndMethods
     {
         private SQLiteConnection sqlite;
@@ -59,82 +72,13 @@ namespace EstadoResultadoWPF
                 System.Windows.Forms.MessageBox.Show("El aplicativo require archivo de configuración (.ini).");
                 System.Console.WriteLine(ex.Message);
             }
-            sqlite = new SQLiteConnection("Data Source=" + db_file);
-            SQLiteDataAdapter ad;
-            System.Data.DataTable dt = new System.Data.DataTable();
-
-            try
-            {
-                SQLiteCommand cmd;
-                sqlite.Open();  //Initiate connection to the db
-
-                // First load ITEMS
-                cmd = sqlite.CreateCommand();
-                cmd.CommandText = Constants.QUERY_ITEMS;
-                ad = new SQLiteDataAdapter(cmd);
-                ad.Fill(dt); //fill the datasource
-                DataRow[] rows = dt.Select();
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    items.Add((string)rows[i][Constants.ITEMS_1], (string)rows[i][Constants.ITEMS_2]);
-                }
-                ad.Dispose();
-                dt.Dispose();
-                rows = null;
-
-                // Second load AREA
-                cmd = sqlite.CreateCommand();
-                cmd.CommandText = Constants.QUERY_AREA;
-                ad = new SQLiteDataAdapter(cmd);
-                dt = new System.Data.DataTable();
-                ad.Fill(dt); //fill the datasource
-                rows = dt.Select();
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    string[] marca_agrup = new string[2];
-                    marca_agrup[0] = (string)rows[i][Constants.AREA_2];
-                    marca_agrup[1] = (string)rows[i][Constants.AREA_3];
-                    area.Add((string)rows[i][Constants.AREA_1], marca_agrup);
-                }
-                ad.Dispose();
-
-                // Third load EERR
-                ArrayList eerr = new ArrayList();
-                cmd = sqlite.CreateCommand();
-                cmd.CommandText = Constants.QUERY_EERR;  //set the passed query
-                ad = new SQLiteDataAdapter(cmd);
-                dt = new System.Data.DataTable();
-                ad.Fill(dt); //fill the datasource
-                rows = dt.Select();
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    string[] prefix_desc = new string[2];
-                    prefix_desc[0] = (string)rows[i][Constants.EERR_1];
-                    prefix_desc[1] = (string)rows[i][Constants.EERR_2];
-                    eerr.Add(prefix_desc);
-                }
-                arrEERR = eerr.ToArray();
-                ad.Dispose();
-
-                // Fourth load branches
-                cmd = sqlite.CreateCommand();
-                cmd.CommandText = Constants.QUERY_SUCURSAL;  //set the passed query
-                ad = new SQLiteDataAdapter(cmd);
-                dt = new System.Data.DataTable();
-                ad.Fill(dt); //fill the datasource
-                rows = dt.Select();
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    sucursal.Add((string)rows[i][Constants.BRANCH_1], (string)rows[i][Constants.BRANCH_2]);
-                }
-                arrEERR = eerr.ToArray();
-                ad.Dispose();
-            }
-            catch (SQLiteException ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
-            }
-            sqlite.Close();
+            
+            ConfigModel cfgModel = new ConfigModel(db_file);
+            
+            items = cfgModel.getItems();
+            area = cfgModel.getAreas();
+            arrEERR = cfgModel.getEERRs().ToArray();
+            
         }
 
         public string getIniParam(string key)
@@ -146,24 +90,72 @@ namespace EstadoResultadoWPF
             return retVal;
         }
  
-        public Dictionary<string, string> getItems()
+        public List<ItemData> getItems()
         {
-            return items;
+        	List<ItemData> lItem = new List<ItemData>();
+            foreach(string key in items.Keys)
+            {
+            	string vDesc = items[key];
+            	lItem.Add(new ItemData {Codigo =key, Descripcion = vDesc});
+            }
+            return lItem;
         }
 
-        public Dictionary<string, string[]> getAreas()
+       
+        public List<AreaData> getAreas()
         {
-            return area;
+        	List<AreaData> lArea = new List<AreaData>();
+            foreach(string key in area.Keys)
+            {
+            	string[] vArea = area[key];
+            	lArea.Add(new AreaData {Area =key, Marca = vArea[0], Agrupacion = vArea[1]});
+            }
+            return lArea;
         }
 
-        public string getArea(string code)
+        public string[] getArea(string code)
         {
-            string retVal = "N/A";
+        	string[] retVal = null;
             if (area.ContainsKey(code))
             {
-                retVal = area[code][1];
+                retVal = area[code];
             }
             return retVal;
+        }
+        
+        public string getMarca(string pArea)
+        {
+        	string retVal = null;
+            if (area.ContainsKey(pArea))
+            {
+            	retVal = area[pArea][0];
+            }
+            return retVal;
+        	
+        }
+        
+        public string getAgrupacion(string pArea)
+        {
+        	string retVal = null;
+            if (area.ContainsKey(pArea))
+            {
+            	retVal = area[pArea][1];
+            }
+            return retVal;
+        	
+        }
+
+        public void setArea(AreaData ad)
+        {
+        	if (area.ContainsKey(ad.Area))
+        	{
+        		string[] ma = area[ad.Area];
+        		ma[0] = ad.Marca;
+        		ma[1] = ad.Agrupacion;
+        	}
+        	else{
+        		this.area.Add(ad.Area, new string[]{ad.Marca, ad.Agrupacion});
+        	}
         }
 
         public string getBrand(string code)

@@ -56,6 +56,13 @@ namespace EstadoResultadoWPF
             itemMaint.Show();
         }
 
+        private void mnAreas_Click(object sender, RoutedEventArgs e)
+        {
+            ParamMaint itemMaint = new ParamMaint(Constants.INV_AREAS,eerrLib);
+            itemMaint.Title = "Mantención de Areas";
+            itemMaint.Show();
+        }
+
         private void listFiles()
         {
             try
