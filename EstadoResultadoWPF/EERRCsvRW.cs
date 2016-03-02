@@ -142,7 +142,7 @@ namespace EstadoResultadoWPF
 
                             c = r.GetCell(C_IN_AREA - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_DESC_AREA - 1);
-                            cell.SetCellValue(eerr.getArea(c.ToString()));
+                            cell.SetCellValue(eerr.getAgrupacion(c.ToString()));
                             cell = (XSSFCell)row.CreateCell(C_OUT_BRAND - 1);
                             cell.SetCellValue(eerr.getBrand(c.ToString()));
                             cell = (XSSFCell)row.CreateCell(C_OUT_DET_EERR - 1);
