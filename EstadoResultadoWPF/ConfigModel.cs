@@ -69,7 +69,7 @@ namespace EstadoResultadoWPF
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
             }
-            
+            sqlite = null;
             return items;
         	
         }
@@ -105,6 +105,7 @@ namespace EstadoResultadoWPF
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
             }
+            sqlite = null;
             
             return areas;
         	
@@ -141,7 +142,7 @@ namespace EstadoResultadoWPF
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
             }
-            
+            sqlite = null;
             return eerrs;
         	
         }

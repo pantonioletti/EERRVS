@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+//using System.Collections;
+//using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows;
 
-using NPOI.HSSF.Model;
+//using NPOI.HSSF.Model;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -87,12 +88,64 @@ namespace EstadoResultadoWPF
 
         const string C_STR_IN_HEAD = "RCL SUDAMERICANA SOCIEDAD ANONIMA";
         const string C_STR_IN_ACCOUNT = "Cuenta Contable";
-        char C_COL_SEPARATOR = ';';
+        const char C_COL_SEPARATOR = ';';
 
         const string C_ERR_MSG_FILE_FMT_ERR = "File format incorrect";
 
         const string C_DATA_STATUS = "REAL";
-        StreamReader in_fd;
+        //StreamReader in_fd;
+
+        private String getCellValue(ICell c)
+        {
+        	String retVal = "";
+        	if (c != null)
+        		retVal = c.ToString();
+        	
+        	return retVal;
+        }
+        
+        private String getMonth(ICell c)
+        {
+        	
+        	String retVal = "";
+        	if (c != null)
+        	{
+        		if (c.CellType == CellType.Numeric){
+        			if (DateUtil.IsCellDateFormatted(c)){
+        				DateTime dt = c.DateCellValue;
+        				retVal = months[dt.Month-1];
+        			}
+        			else
+        				retVal = c.NumericCellValue.ToString();
+        		}
+        		else if (c.CellType == CellType.String)
+        			retVal = getCellValue(c);
+        	}
+        	
+        	return retVal;
+        }
+        
+        private String getCellDateValue(ICell c)
+        {
+        	String retVal = "";
+        	if (c != null)
+        	{
+        		if (c.CellType == CellType.Numeric){
+        			if (DateUtil.IsCellDateFormatted(c)){
+        				DateTime dt = c.DateCellValue;
+        				retVal = (dt.Day<10?"0":"") + dt.Day.ToString() + "-";
+        				retVal += (dt.Month<10?"0":"") + dt.Month.ToString() + "-";
+        				retVal += dt.Year;
+        			}
+        			else
+        				retVal = c.NumericCellValue.ToString();
+        		}
+        		else if (c.CellType == CellType.String)
+        			retVal = getCellValue(c);
+        	}
+        	
+        	return retVal;
+        }
 
         public StringBuilder readXls(string file, EERRDataAndMethods eerr, XSSFWorkbook twb, bool applyRate, Double rate)
         {
@@ -116,8 +169,7 @@ namespace EstadoResultadoWPF
                     c = r.GetCell(0);
                     if (c != null)
                     {
-                        
-                        if ((c.StringCellValue).StartsWith(C_STR_IN_ACCOUNT))
+                        if (c.CellType == CellType.String && (c.StringCellValue).StartsWith(C_STR_IN_ACCOUNT))
                         {
                             acct = c.StringCellValue;
                             acct = acct.Substring(C_STR_IN_ACCOUNT.Length).Trim();
@@ -144,7 +196,7 @@ namespace EstadoResultadoWPF
                             cell = (XSSFCell)row.CreateCell(C_OUT_DESC_AREA - 1);
                             cell.SetCellValue(eerr.getAgrupacion(c.ToString()));
                             cell = (XSSFCell)row.CreateCell(C_OUT_BRAND - 1);
-                            cell.SetCellValue(eerr.getBrand(c.ToString()));
+                            cell.SetCellValue(eerr.getBrand(getCellValue(c)));
                             cell = (XSSFCell)row.CreateCell(C_OUT_DET_EERR - 1);
                             cell.SetCellValue(eerr.getLinea(acct));
                             cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_NUM - 1);
@@ -154,64 +206,58 @@ namespace EstadoResultadoWPF
 
                             c = r.GetCell(C_IN_DATE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_DATE - 1);
-                            cell.SetCellValue(c.ToString());
+                            
+                            
+                            cell.SetCellValue(getCellDateValue(c));
 
-                            string sdate = c.ToString();
-                            if (sdate.Length == 10)
-                            {
-                                short m = 0;
-                                if (Int16.TryParse(sdate.Substring(3, 2), out m))
-                                {
-                                    cell = (XSSFCell)row.CreateCell(C_OUT_MONTH - 1);
-                                    cell.SetCellValue(months[m - 1]);
-                                }
-                            }
+                            cell = (XSSFCell)row.CreateCell(C_OUT_MONTH - 1);
+                            cell.SetCellValue(getMonth(c));
 
                             c = r.GetCell(C_IN_COMPTE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_COMPTE - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_TYPE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_TYPE - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_COMMENT - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_COMMENT - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_AREA - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_AREA - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_COST_CENTER - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_COST_CENT - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_ITEM - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_ITEM - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
                             cell = (XSSFCell)row.CreateCell(C_OUT_ITEM_DESC - 1);
-                            cell.SetCellValue(eerr.getItem(c.ToString()));
+                            cell.SetCellValue(eerr.getItem(getCellValue(c)));
 
                             c = r.GetCell(C_IN_EFF_DATE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_EFF_DATE - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellDateValue(c));
 
                             c = r.GetCell(C_IN_ANALISYS_DATE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_ANALYSIS_DATE - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_REFERENCE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_REF - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellValue(c));
 
                             c = r.GetCell(C_IN_REF_DATE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_REF_DATE - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellDateValue(c));
 
                             c = r.GetCell(C_IN_EXP_DATE - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_EXP_DATE - 1);
-                            cell.SetCellValue(c.ToString());
+                            cell.SetCellValue(getCellDateValue(c));
 
                             XSSFCell deb = null;
                             short doubleFormat = HSSFDataFormat.GetBuiltinFormat("#,##0");  //wb.CreateDataFormat().GetFormat("#,##0");
