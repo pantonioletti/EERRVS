@@ -1,0 +1,6 @@
+obj
+/EstadoResultado/bin/Debug/app.publish/Application Files/EstadoResultado_1_0_0_13
+/EstadoResultado/bin/Release/app.publish/Application Files/EstadoResultado_1_0_0_9
+*.exe
+/EstadoResultado/bin/Release
+/ReadZip/bin

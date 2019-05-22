@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+# SharpDevelop 5.1
+VisualStudioVersion = 12.0.20827.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstadoResultadoWPF", "EstadoResultadoWPF.csproj", "{52F3047A-D221-4DE4-8574-34F130F87090}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOI", "..\..\..\..\tpsfw\npoi-master\main\NPOI.csproj", "{10FA8538-157A-4380-A4F6-8E2C3EE92CAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOI.OOXML", "..\..\..\..\tpsfw\npoi-master\ooxml\NPOI.OOXML.csproj", "{6BEED965-B9A0-4FFA-B96D-0F380A97331A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOI.OpenXml4Net", "..\..\..\..\tpsfw\npoi-master\ooxml\openxml4Net\NPOI.OpenXml4Net.csproj", "{C9F265B7-ECE3-4755-B0B1-79536575C2A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPOI.OpenXmlFormats", "..\..\..\..\tpsfw\npoi-master\ooxml\OpenXmlFormats\NPOI.OpenXmlFormats.csproj", "{A6874784-2875-4F40-9E8F-8385A640F5D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52F3047A-D221-4DE4-8574-34F130F87090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F3047A-D221-4DE4-8574-34F130F87090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F3047A-D221-4DE4-8574-34F130F87090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F3047A-D221-4DE4-8574-34F130F87090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10FA8538-157A-4380-A4F6-8E2C3EE92CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10FA8538-157A-4380-A4F6-8E2C3EE92CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10FA8538-157A-4380-A4F6-8E2C3EE92CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10FA8538-157A-4380-A4F6-8E2C3EE92CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BEED965-B9A0-4FFA-B96D-0F380A97331A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BEED965-B9A0-4FFA-B96D-0F380A97331A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BEED965-B9A0-4FFA-B96D-0F380A97331A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BEED965-B9A0-4FFA-B96D-0F380A97331A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9F265B7-ECE3-4755-B0B1-79536575C2A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9F265B7-ECE3-4755-B0B1-79536575C2A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9F265B7-ECE3-4755-B0B1-79536575C2A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9F265B7-ECE3-4755-B0B1-79536575C2A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6874784-2875-4F40-9E8F-8385A640F5D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6874784-2875-4F40-9E8F-8385A640F5D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6874784-2875-4F40-9E8F-8385A640F5D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6874784-2875-4F40-9E8F-8385A640F5D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
