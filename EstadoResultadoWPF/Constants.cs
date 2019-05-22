@@ -33,3 +33,8 @@ namespace EstadoResultadoWPF
         public static string EERR_SHEET_NAME = "Estado resultado";
     }
 }
+namespace SaldoClientes{
+	class SCConstants{
+		
+	}
+}

@@ -9,12 +9,12 @@
 	<Grid
 		Margin="0,0,20,7">
 		<Menu
-			Width="264"
+			Width="337"
 			Grid.Column="0"
 			Grid.Row="0"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Stretch"
-			Margin="-4,-2,0,462">
+			Margin="-4,-2,0,462.333333333333">
 			<MenuItem
 				x:Name="mnData"
 				Header="Data"
@@ -31,12 +31,24 @@
 				<MenuItem
 					x:Name="mnAreas"
 					Header="Areas"
-					HorizontalAlignment="Left" 
-				    Click="mnAreas_Click" />
+					HorizontalAlignment="Left"
+					Click="mnAreas_Click" />
 			</MenuItem>
 			<MenuItem
 				x:Name="mnConfig"
-				Header="Configuración" />
+				Header="Configuración"
+				Click="mnConfig_Click"
+				RenderTransformOrigin="0.5,0.5" />
+			<MenuItem
+				x:Name="mnCtaAnalisis"
+				Header="Cuenta análisis"
+				Click="mnCtaAnalisis_Click"
+				RenderTransformOrigin="0.5,0.5" />
+			<MenuItem
+				x:Name="mnCtasCltes"
+				Header="Cuentas clientes"
+				Click="mnCtasCltes_Click"
+				RenderTransformOrigin="0.5,0.5" />
 		</Menu>
 		<TextBox
 			x:Name="PathIn"
@@ -110,9 +122,9 @@
 			Click="chkApplyRate_Click"
 			Content="Aplicar tipo de cambio"
 			HorizontalAlignment="Left"
-			Margin="486,174,0,0"
 			VerticalAlignment="Top"
-			Checked="chkApplyRate_Checked" />
+			Checked="chkApplyRate_Checked"
+			Margin="486,174,0,0" />
 		<TextBox
 			x:Name="txtExchgRate"
 			HorizontalAlignment="Right"

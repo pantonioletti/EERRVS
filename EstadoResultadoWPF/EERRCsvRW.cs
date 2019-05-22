@@ -1,12 +1,8 @@
 ﻿using System;
-//using System.Collections;
-//using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Windows;
 
-//using NPOI.HSSF.Model;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -147,6 +143,193 @@ namespace EstadoResultadoWPF
         	return retVal;
         }
 
+
+        public StringBuilder readXlsx(string file, EERRDataAndMethods eerr, XSSFWorkbook twb, bool applyRate, Double rate)
+        {
+            StringBuilder retVal = new StringBuilder("");
+            //XSSFWorkbook wb;
+            IWorkbook wb = null;
+            
+            FileInfo fi = new FileInfo(file);
+            if (file.EndsWith(".xlsx"))
+            	wb = new XSSFWorkbook(fi);
+            else if (file.EndsWith(".xls"))
+            	wb = new HSSFWorkbook(new FileStream(file, FileMode.Open));
+
+            ISheet sheet = wb.GetSheetAt(0);
+            IRow r = sheet.GetRow(0);
+            ICell c = r.GetCell(0);
+            string company = c.StringCellValue;
+            XSSFSheet sh = (XSSFSheet)twb.GetSheet("Estado resultado");
+
+            string acct = "";
+            string acctDesc = "";
+            for (int i = 1; i < sheet.LastRowNum; i++)
+            {
+                r = sheet.GetRow(i);
+                if (r != null)
+                {
+                    c = r.GetCell(0);
+                    if (c != null)
+                    {
+                        if (c.CellType == CellType.String && (c.StringCellValue).StartsWith(C_STR_IN_ACCOUNT))
+                        {
+                            acct = c.StringCellValue;
+                            acct = acct.Substring(C_STR_IN_ACCOUNT.Length).Trim();
+                            int pos = acct.IndexOf(' ');
+                            acctDesc = acct.Substring(pos + 1).Trim();
+                            acct = acct.Substring(0,pos).Trim();
+                            Console.WriteLine("Account: " + acct + " " + acctDesc);
+                        }
+                        else if (acct.Length > 0 && r.LastCellNum >= 16)
+                        {
+                            
+                            //"Estado" 1,"Empresa" 2,"Agrupacion" 3,"Marca," 4,"EERR" 5,"Detalle EERR" 6,"Cuenta" 7,"Desc Cuenta" 8,
+                            //"Mes" 9,"Fecha" 10,"# Compte" 11,"Tipo;Glosa" 12,"Area" 13,"C.Costo" 14,"Item" 15,"Desc Item" 16, "F.Efec" 17,
+                            //"Analisis" 18,"Refer" 19,"Fch Ref" 20,"Fch Vto" 21,"DEBE" 22,"HABER" 23,"SALDO" 24,"Sucursal" 25
+                            string s = "";
+                            XSSFRow row = (XSSFRow)sh.CreateRow(sh.LastRowNum+1);
+
+                            XSSFCell cell = (XSSFCell)row.CreateCell(C_OUT_STAT - 1);
+                            cell.SetCellValue(C_DATA_STATUS);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_CIA - 1);
+                            cell.SetCellValue(company);
+
+                            c = r.GetCell(C_IN_AREA - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_DESC_AREA - 1);
+                            cell.SetCellValue(eerr.getAgrupacion(c.ToString()));
+                            cell = (XSSFCell)row.CreateCell(C_OUT_BRAND - 1);
+                            cell.SetCellValue(eerr.getBrand(getCellValue(c)));
+                            cell = (XSSFCell)row.CreateCell(C_OUT_DET_EERR - 1);
+                            cell.SetCellValue(eerr.getLinea(acct));
+                            cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_NUM - 1);
+                            cell.SetCellValue(acct);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_DESC - 1);
+                            cell.SetCellValue(acctDesc);
+
+                            c = r.GetCell(C_IN_DATE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_DATE - 1);
+                            
+                            
+                            cell.SetCellValue(getCellDateValue(c));
+
+                            cell = (XSSFCell)row.CreateCell(C_OUT_MONTH - 1);
+                            cell.SetCellValue(getMonth(c));
+
+                            c = r.GetCell(C_IN_COMPTE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_COMPTE - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_TYPE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_TYPE - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_COMMENT - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_COMMENT - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_AREA - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_AREA - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_COST_CENTER - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_COST_CENT - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_ITEM - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_ITEM - 1);
+                            cell.SetCellValue(getCellValue(c));
+                            cell = (XSSFCell)row.CreateCell(C_OUT_ITEM_DESC - 1);
+                            cell.SetCellValue(eerr.getItem(getCellValue(c)));
+
+                            c = r.GetCell(C_IN_EFF_DATE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_EFF_DATE - 1);
+                            cell.SetCellValue(getCellDateValue(c));
+
+                            c = r.GetCell(C_IN_ANALISYS_DATE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_ANALYSIS_DATE - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_REFERENCE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_REF - 1);
+                            cell.SetCellValue(getCellValue(c));
+
+                            c = r.GetCell(C_IN_REF_DATE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_REF_DATE - 1);
+                            cell.SetCellValue(getCellDateValue(c));
+
+                            c = r.GetCell(C_IN_EXP_DATE - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_EXP_DATE - 1);
+                            cell.SetCellValue(getCellDateValue(c));
+
+                            XSSFCell deb = null;
+                            short doubleFormat = HSSFDataFormat.GetBuiltinFormat("#,##0");  //wb.CreateDataFormat().GetFormat("#,##0");
+                            double v = 0;
+                            c = r.GetCell(C_IN_DEBIT - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_DEBIT - 1);
+                            deb = cell;
+                            if (c != null)
+                            {
+                                s = c.ToString();
+                                if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
+                                {
+                                    //cell = (XSSFCell)row.CreateCell(C_OUT_DEBIT - 1);
+                                    cell.SetCellValue((applyRate?rate:1)*v);
+                                    cell.SetCellType(CellType.Numeric);
+                                    cell.CellStyle.DataFormat = doubleFormat;
+                                    
+                                }
+                            }
+
+                            XSSFCell cred = null;
+                            c = r.GetCell(C_IN_CREDIT - 1);
+                            cell = (XSSFCell)row.CreateCell(C_OUT_CREDIT - 1);
+                            cred = cell;
+                            if (c != null)
+                            {
+                                s = c.ToString();
+                                if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
+                                {
+                                    //cell = (XSSFCell)row.CreateCell(C_OUT_CREDIT - 1);
+                                    cell.SetCellValue((applyRate ? rate : 1) * v);
+                                    cell.SetCellType(CellType.Numeric);
+                                    cell.CellStyle.DataFormat = doubleFormat;
+                                }
+                            }
+                            c = r.GetCell(C_IN_BALANCE - 1);
+                            if (c != null)
+                            {
+                                s = c.ToString();
+                                if (!string.IsNullOrEmpty(s) && Double.TryParse(s, out v))
+                                {
+                                    cell = (XSSFCell)row.CreateCell(C_OUT_BALANCE - 1);
+                                    cell.SetCellValue((applyRate ? rate : 1) * v);
+                                    cell.SetCellType(CellType.Formula);
+                                    cell.SetCellFormula(String.Format("{0}{1}-{2}{3}", C_COL_DEBIT, cell.Row.RowNum+1, C_COL_CREDIT, cell.Row.RowNum+1));
+                                    cell.CellStyle.DataFormat = doubleFormat;
+                                }
+                            }
+                            c = r.GetCell(C_IN_BRANCH - 1);
+                            if (c != null)
+                            {
+                                s = c.ToString();
+                                if (!string.IsNullOrEmpty(s))
+                                {
+                                    cell = (XSSFCell)row.CreateCell(C_OUT_BRANCH - 1);
+                                    cell.SetCellValue(eerr.getSucursal(s));
+                                
+                                }
+                                
+                            }
+                        }
+                    }
+
+                }
+            }
+            return retVal;
+        	
+        }
+        	
         public StringBuilder readXls(string file, EERRDataAndMethods eerr, XSSFWorkbook twb, bool applyRate, Double rate)
         {
             StringBuilder retVal = new StringBuilder("");
