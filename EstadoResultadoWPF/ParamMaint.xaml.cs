@@ -46,22 +46,6 @@ namespace EstadoResultadoWPF
             }
             else if (curParam.Equals(Constants.INV_AREAS))
             {
-                /*DataGridTextColumn c1 = new DataGridTextColumn();
-                c1.Header = "Area";
-                c1.Binding = new Binding("Area");
-                c1.Width = 110;
-                dgParamsData.Columns.Add(c1);
-                DataGridTextColumn c2 = new DataGridTextColumn();
-                c2.Header = "Marca";
-                c2.Width = 110;
-                c2.Binding = new Binding("Marca");
-                dgParamsData.Columns.Add(c2);
-                DataGridTextColumn c3 = new DataGridTextColumn();
-                c3.Header = "Agrupación";
-                c3.Width = 110;
-                c3.Binding = new Binding("Agrupacion");
-                dgParamsData.Columns.Add(c3);
-                */
                 dgParamsData.Width = 360;
                 this.Width = 390;
                 
@@ -93,13 +77,15 @@ namespace EstadoResultadoWPF
         	else if (curParam.Equals(Constants.INV_ITEMS))
         	{
         		dgParamsData.Items.MoveCurrentToFirst();
-        		
+        		List<ItemData> id = new List<ItemData>();
         		while(!dgParamsData.Items.IsCurrentAfterLast)
         		{
         			ItemData item = (ItemData)dgParamsData.Items.CurrentItem;
+        			id.Add(item);
         			dgParamsData.Items.MoveCurrentToNext();
         			
         		}
+        		eerr.updateItems(id);
         	}
         	else if (curParam.Equals(Constants.INV_LINEAS))
         	{

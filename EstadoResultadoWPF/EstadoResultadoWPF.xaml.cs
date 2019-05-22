@@ -1,22 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-
 using System.Windows.Forms;
 using System.IO;
-//using DocumentFormat.OpenXml;
-//using DocumentFormat.OpenXml.Packaging;
-//using DocumentFormat.OpenXml.Spreadsheet;
 
 using NPOI.XSSF.UserModel;
 
@@ -74,7 +62,7 @@ namespace EstadoResultadoWPF
                 {
                     string fName = enFiles.Current;
                     //if (fName.EndsWith(".csv") || fName.EndsWith(".xls"))
-                    if (fName.EndsWith(".xls"))
+                    if (fName.EndsWith(".xls") || fName.EndsWith(".xlsx"))
                         //ListInputFiles.Items.Add(fName.Replace((PathIn.Text).Insert((PathOut.Text).Length, "\\"), ""));
                         ListInputFiles.Items.Add(fName.Replace(PathIn.Text+"\\", ""));
                 }
@@ -140,7 +128,7 @@ namespace EstadoResultadoWPF
                 {
                     string inFile = path + (string)idxEnum.Current;
                     Double rate = chkApplyRate.IsChecked.Value?Double.Parse(txtExchgRate.Text):0;
-                    csvrw.readXls(inFile, eerrLib, xlDoc, chkApplyRate.IsChecked.Value, rate);
+                    csvrw.readXlsx(inFile, eerrLib, xlDoc, chkApplyRate.IsChecked.Value, rate);
                 }
                 xlDoc.Write(new FileStream(PathOut.Text + "\\" + FileOut.Text /*+ ".xlsx"*/, FileMode.Create, FileAccess.Write));
                 log.Close();
@@ -181,6 +169,22 @@ namespace EstadoResultadoWPF
             }
 
         }
+		void mnConfig_Click(object sender, RoutedEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
         
+		void mnCtaAnalisis_Click(object sender, RoutedEventArgs e)
+		{
+			CtaAnalisis ctaAnalisis = new CtaAnalisis();
+            ctaAnalisis.Title = "Mantención de Items";
+            ctaAnalisis.Show();		
+		}
+		
+		void mnCtasCltes_Click(object sender, RoutedEventArgs e)
+		{
+			
+		}
+
     }
 }

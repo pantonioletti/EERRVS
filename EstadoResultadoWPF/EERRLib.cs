@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using System.Data;
-using System.Diagnostics;
 
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-
 
 namespace EstadoResultadoWPF
 {
@@ -34,6 +30,7 @@ namespace EstadoResultadoWPF
         private Dictionary<string, string> sucursal = new Dictionary<string, string>();
         Dictionary<string, string> confKeyValuePairs = new Dictionary<string, string>();
         private Object[] arrEERR;
+        ConfigModel cfgModel;
 
         public EERRDataAndMethods(string confFile)
         {
@@ -73,11 +70,12 @@ namespace EstadoResultadoWPF
                 System.Console.WriteLine(ex.Message);
             }
             
-            ConfigModel cfgModel = new ConfigModel(db_file);
+            cfgModel = new ConfigModel(db_file);
             
             items = cfgModel.getItems();
             area = cfgModel.getAreas();
             arrEERR = cfgModel.getEERRs().ToArray();
+            sucursal = cfgModel.getBranchs();
             
         }
 
@@ -99,6 +97,27 @@ namespace EstadoResultadoWPF
             	lItem.Add(new ItemData {Codigo =key, Descripcion = vDesc});
             }
             return lItem;
+        }
+        
+        public bool updateItems(List<ItemData> plItem)
+        {
+        	bool retVal = false;
+        	List<string> stmts=new List<string>();
+        	
+        	foreach(ItemData id in plItem)
+        	{
+        		if (items.ContainsKey(id.Codigo)){
+        		    if (!items[id.Codigo].Equals(id.Descripcion))
+        		    	stmts.Add("update items set desc = '"+id.Descripcion+"';");
+        		}
+        		else
+        			stmts.Add("insert into items (cod,desc) values ('"+id.Codigo+"','"+id.Descripcion+"';");
+        	}
+        	if (cfgModel.execQueries(stmts) >= 0)
+        		retVal = true;
+        	
+        	return retVal;
+        	
         }
 
        
@@ -230,3 +249,4 @@ namespace EstadoResultadoWPF
 
     }
 }
+
