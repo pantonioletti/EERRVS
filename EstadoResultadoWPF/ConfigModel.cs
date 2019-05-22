@@ -41,6 +41,40 @@ namespace EstadoResultadoWPF
         		
         }
         
+        public Dictionary<string,string> getBranchs()
+        {
+        	Dictionary<string,string> branchs = new Dictionary<string,string>();
+        	SQLiteConnection conn = getConnection();
+        	System.Data.DataTable dt = new System.Data.DataTable();
+            try
+            {
+                SQLiteCommand cmd;
+                //conn.Open();  //Initiate connection to the db
+
+                cmd = conn.CreateCommand();
+                cmd.CommandText = QUERY_SUCURSAL;
+                ad = new SQLiteDataAdapter(cmd);
+                ad.Fill(dt); //fill the datasource
+                DataRow[] rows = dt.Select();
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    branchs.Add((string)rows[i][Constants.BRANCH_1], (string)rows[i][Constants.BRANCH_2]);
+                }
+                ad.Dispose();
+                dt.Dispose();
+                rows = null;
+
+            }
+            catch (SQLiteException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            sqlite = null;
+            return branchs;
+        	
+        }
+
+
         public Dictionary<string,string> getItems()
         {
         	Dictionary<string,string> items = new Dictionary<string,string>();
@@ -71,6 +105,29 @@ namespace EstadoResultadoWPF
             }
             sqlite = null;
             return items;
+        	
+        }
+ 
+        public int execQueries(List<string> stmts)
+        {
+        	int retVal = 0;
+        	SQLiteConnection conn = getConnection();
+            try
+            {
+                SQLiteCommand cmd;
+                cmd = conn.CreateCommand();
+                foreach(string stmt in stmts){
+	                cmd.CommandText = stmt;
+	                retVal += cmd.ExecuteNonQuery();
+                }
+
+            }
+            catch (SQLiteException ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+                retVal = -1;
+            }
+            return retVal;
         	
         }
         
