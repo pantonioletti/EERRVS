@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 
 using NPOI.XSSF.UserModel;
-
+using Application = System.Windows.Application;
 
 namespace EstadoResultadoWPF
 {
@@ -20,6 +20,7 @@ namespace EstadoResultadoWPF
 
         public WEstadoResultado()
         {
+            Console.WriteLine("Iniciando appp");
             InitializeComponent();
             string[] cmdLn = Environment.GetCommandLineArgs();
             if (cmdLn.Length < 2)
@@ -27,6 +28,7 @@ namespace EstadoResultadoWPF
             else
                 eerrLib = new EERRDataAndMethods(cmdLn[1]);
             string s = eerrLib.getIniParam(Constants.DEFAULT_INPUT_DIR);
+            Console.WriteLine("Ya inició");
             if (string.IsNullOrEmpty(s))
                 s = "";
             PathIn.Text = s;
@@ -123,7 +125,7 @@ namespace EstadoResultadoWPF
 
                 System.Collections.IEnumerator idxEnum = ListInputFiles.SelectedItems.GetEnumerator();
                 EERRCsvRW csvrw = new EERRCsvRW();
-                string path = PathIn.Text + "\\";
+                string path = ""; //PathIn.Text + "\\";
                 while (idxEnum.MoveNext())
                 {
                     string inFile = path + (string)idxEnum.Current;
@@ -185,6 +187,20 @@ namespace EstadoResultadoWPF
 		{
 			
 		}
+        [STAThread]
+        public static void Main(String[] args)
+        {
+            //List<String> lf = new List<String>();
+            //lf.Add("D:\\dev\\projects\\EERR\\data\\RCL ANALISIS 07.2019.xls");
+            Application app = new Application();
+            app.StartupUri = new Uri("EstadoResultadoWPF.xaml", System.UriKind.Relative);
+            app.Run();
+            //Console.WriteLine("Iniciando la aplicación");
+            //WEstadoResultado a = new WEstadoResultado();// lf, "D:/dev/projects/EERR/data/pmas.xlsx");
+            //a.Activate();
+            //a.Show();
+            //app.Run();
+        }
 
     }
 }

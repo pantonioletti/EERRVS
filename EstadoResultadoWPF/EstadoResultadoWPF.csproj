@@ -9,13 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EstadoResultadoWPF</RootNamespace>
     <AssemblyName>EstadoResultadoWPF</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>ead8d340</NuGetPackageImportStamp>
-    <NoWin32Manifest>False</NoWin32Manifest>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -77,7 +76,7 @@
     <ApplicationIcon>P++.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>EstadoResultadoWPF.App</StartupObject>
+    <StartupObject>EstadoResultadoWPF.WEstadoResultado</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -94,6 +93,10 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <StartAction>Project</StartAction>
     <StartArguments>"C:\dev\projects\Visual Studio\Projects\TestExcel\EstadoResultadoWPF\rcl\rcl_format.ini"</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -158,10 +161,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    </Page>
     <Compile Include="CtaAnalisis.xaml.cs">
       <DependentUpon>CtaAnalisis.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -179,6 +182,7 @@
     <Compile Include="EERRCsvRW.cs" />
     <Compile Include="EERRLib.cs" />
     <Compile Include="PMASLib.cs" />
+    <Compile Include="ProcAnalisis.cs" />
     <Compile Include="SaldoClientes.cs" />
     <Compile Include="EstadoResultadoWPF.xaml.cs">
       <DependentUpon>EstadoResultadoWPF.xaml</DependentUpon>
@@ -246,7 +250,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 y x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -192,13 +192,15 @@ namespace EstadoResultadoWPF
             return arrEERR;
         }
 
-        public string getLinea(string acct)
+        public string[] getLinea(string acct)
         {
-            string retVal = null;
+            string[] retVal = new string[3] {null, null, null};
             for (int i = 0; i < arrEERR.Length; i++)
                 if (acct.StartsWith(((string[])arrEERR[i])[0]))
                 {
-                    retVal = ((string[])arrEERR[i])[1];
+                    retVal[0] = ((string[])arrEERR[i])[1];
+                    retVal[1] = ((string[])arrEERR[i])[2];
+                    retVal[2] = ((string[])arrEERR[i])[3];
                     break;
                 }
             return retVal;

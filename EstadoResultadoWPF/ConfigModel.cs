@@ -21,7 +21,7 @@ namespace EstadoResultadoWPF
 	{
         private static string QUERY_ITEMS = "select cod, desc from items;";
         private static string QUERY_AREA = "select area, marca, agrupacion from area;";
-        private static string QUERY_EERR = "select length(prefix) l, prefix, desc from eerr order by l asc, prefix asc;";
+        private static string QUERY_EERR = "select length(prefix) l, prefix, desc, grupo, eerr from eerr order by l asc, prefix asc;";
         private static string QUERY_SUCURSAL = "select cod, desc from sucursal;";
 
         private SQLiteDataAdapter ad;
@@ -186,9 +186,11 @@ namespace EstadoResultadoWPF
                 DataRow[] rows = dt.Select();
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    string[] prefix_desc = new string[2];
+                    string[] prefix_desc = new string[4];
                     prefix_desc[0] = (string)rows[i][Constants.EERR_1];
                     prefix_desc[1] = (string)rows[i][Constants.EERR_2];
+                    prefix_desc[2] = (string)rows[i][Constants.EERR_3];
+                    prefix_desc[3] = (string)rows[i][Constants.EERR_4];
                     eerrs.Add(prefix_desc);
                 }
                 ad.Dispose();

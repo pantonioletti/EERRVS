@@ -198,10 +198,15 @@ namespace EstadoResultadoWPF
                             c = r.GetCell(C_IN_AREA - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_DESC_AREA - 1);
                             cell.SetCellValue(eerr.getAgrupacion(c.ToString()));
+
+
+                            String[] eerr_desc_grupo = eerr.getLinea(acct);
                             cell = (XSSFCell)row.CreateCell(C_OUT_BRAND - 1);
-                            cell.SetCellValue(eerr.getBrand(getCellValue(c)));
+                            cell.SetCellValue(eerr_desc_grupo[1] != null ? eerr_desc_grupo[1] : eerr.getBrand(getCellValue(c)));
+                            cell = (XSSFCell)row.CreateCell(C_OUT_EERR - 1);
+                            cell.SetCellValue(eerr_desc_grupo[2]);
                             cell = (XSSFCell)row.CreateCell(C_OUT_DET_EERR - 1);
-                            cell.SetCellValue(eerr.getLinea(acct));
+                            cell.SetCellValue(eerr_desc_grupo[0]);
                             cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_NUM - 1);
                             cell.SetCellValue(acct);
                             cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_DESC - 1);
@@ -378,10 +383,13 @@ namespace EstadoResultadoWPF
                             c = r.GetCell(C_IN_AREA - 1);
                             cell = (XSSFCell)row.CreateCell(C_OUT_DESC_AREA - 1);
                             cell.SetCellValue(eerr.getAgrupacion(c.ToString()));
+                            String[] eerr_desc_grupo = eerr.getLinea(acct);
                             cell = (XSSFCell)row.CreateCell(C_OUT_BRAND - 1);
-                            cell.SetCellValue(eerr.getBrand(getCellValue(c)));
+                            cell.SetCellValue(eerr_desc_grupo[1] != null? eerr_desc_grupo[1]:eerr.getBrand(getCellValue(c)));
+                            cell = (XSSFCell)row.CreateCell(C_OUT_EERR - 1);
+                            cell.SetCellValue(eerr_desc_grupo[2]);
                             cell = (XSSFCell)row.CreateCell(C_OUT_DET_EERR - 1);
-                            cell.SetCellValue(eerr.getLinea(acct));
+                            cell.SetCellValue(eerr_desc_grupo[0]);
                             cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_NUM - 1);
                             cell.SetCellValue(acct);
                             cell = (XSSFCell)row.CreateCell(C_OUT_ACCT_DESC - 1);

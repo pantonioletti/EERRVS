@@ -13,7 +13,7 @@ namespace EstadoResultadoWPF
         public static string DEFAULT_OUTPUT_DIR = "output_dir";
         public static string QUERY_ITEMS = "select cod, desc from items;";
         public static string QUERY_AREA = "select area, marca, agrupacion from area;";
-        public static string QUERY_EERR = "select length(prefix) l, prefix, desc from eerr order by l asc, prefix asc;";
+        public static string QUERY_EERR = "select length(prefix) l, prefix, desc, grupo, eerr from eerr order by l asc, prefix asc;";
         public static string QUERY_SUCURSAL = "select cod, desc from sucursal;";
         public static string ITEMS_1 = "COD";
         public static string ITEMS_2 = "DESC";
@@ -22,6 +22,8 @@ namespace EstadoResultadoWPF
         public static string AREA_3 = "AGRUPACION";
         public static string EERR_1 = "PREFIX";
         public static string EERR_2 = "DESC";
+        public static string EERR_3 = "GRUPO";
+        public static string EERR_4 = "EERR";
         public static string BRANCH_1 = "COD";
         public static string BRANCH_2 = "DESC";
         public static string XLCONVERT_VBS = "xls2xlsx.vbs";
@@ -37,4 +39,12 @@ namespace SaldoClientes{
 	class SCConstants{
 		
 	}
+}
+
+namespace ProcAnalisis
+{
+    class PAConstants
+    {
+        public static string[] header = { "Empresa", "Cuenta", "Analisis Nombre o Razón Social", "# Docto", "Fecha Docto", "Fecha Vencto", "# Compte", "Tipo Compte", "Fecha Compte", "Glosa", "Operación", "Cargos", "Abonos", "Saldo Parcial", "Saldo Total" };
+    }
 }
