@@ -14,6 +14,7 @@ using System.Collections.Generic;
 
 namespace EstadoResultadoWPF
 {
+
 	/// <summary>
 	/// Description of ConfigModel.
 	/// </summary>
@@ -23,6 +24,7 @@ namespace EstadoResultadoWPF
         private static string QUERY_AREA = "select area, marca, agrupacion from area;";
         private static string QUERY_EERR = "select length(prefix) l, prefix, desc, grupo, eerr from eerr order by l asc, prefix asc;";
         private static string QUERY_SUCURSAL = "select cod, desc from sucursal;";
+        private static string QUERY_ANALISIS = "select company, account, comment_start_with, analisis from analisis;";
 
         private SQLiteDataAdapter ad;
         private SQLiteConnection sqlite=null;
